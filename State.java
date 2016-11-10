@@ -7,9 +7,19 @@ public class State {
 	private int agentX;
 	private int agentY;
 
-	public static void main(String[] args) {
-		new State(5).createSolved(5);
-	}
+//	public static void main(String[] args) {
+//		State s = new State(4);
+//		s.move("right");
+//		s.move("up");
+//		s.printState();
+//		s.move("left");
+//		s.printState();
+//		s.move("down");
+//		s.printState();
+//		s.move("right");
+//		s.printState();
+//
+//	}
 
 	public char[][] getBoard() {
 		return board;
@@ -51,8 +61,7 @@ public class State {
 				currentLetter++;
 			}
 		}
-		for (
-				int y = 0; y < size; y++) {
+		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
 				System.out.print(solved[y][x]);
 			}
@@ -60,6 +69,20 @@ public class State {
 		}
 	}
 	// y is first array, x is second array
+
+	public State(State state) {
+		board = new char[state.getSize()][state.getSize()];
+		
+		for (int x = 0; x < state.getSize(); x++) {
+			for (int y = 0; y < state.getSize(); y++) {
+				board[y][x] = state.board[y][x];
+			}
+		}
+
+		this.size = state.size;
+		this.agentX = state.agentX;
+		this.agentY = state.agentY;
+	}
 
 	public State(int size) {
 		this.size = size;
@@ -82,7 +105,7 @@ public class State {
 		// sets agent tile
 		board[size - 1][size - 1] = '!';
 		agentPosition = new Point(size - 1, size - 1);
-		agentX = agentY = size -1;
+		agentX = agentY = size - 1;
 
 	}
 
@@ -93,6 +116,7 @@ public class State {
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 
 	public boolean checkAgentPosition() {
@@ -107,7 +131,6 @@ public class State {
 				}
 			}
 		}
-
 		return false;
 	}
 
@@ -157,15 +180,39 @@ public class State {
 			} else {
 				return true;
 			}
-			
 		default:
 			System.out.println("invalid move check");
 		}
 		return false;
 	}
-	
-	public void move(String direction) {
-		
-	}
 
+	public void move(String direction) {
+		char newSpot;
+		switch (direction) {
+		case "up":
+			newSpot = board[agentY - 1][agentX];
+			board[agentY - 1][agentX] = '@';
+			board[agentY][agentX] = newSpot;
+			agentY -= 1;
+			break;
+		case "down":
+			newSpot = board[agentY + 1][agentX];
+			board[agentY + 1][agentX] = '@';
+			board[agentY][agentX] = newSpot;
+			agentY += 1;
+			break;
+		case "left":
+			newSpot = board[agentY][agentX - 1];
+			board[agentY][agentX - 1] = '@';
+			board[agentY][agentX] = newSpot;
+			agentX -= 1;
+			break;
+		case "right":
+			newSpot = board[agentY][agentX + 1];
+			board[agentY][agentX + 1] = '@';
+			board[agentY][agentX] = newSpot;
+			agentX += 1;
+			break;
+		}
+	}
 }

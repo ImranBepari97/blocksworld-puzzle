@@ -3,34 +3,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class HumanInput {
-	Game g;
-	
+	State s;
+
 	public static void main(String[] args) {
-		new HumanInput(4).play();
-		
+		new HumanInput(3).play();
+
 	}
-	
+
 	public HumanInput(int size) {
-		g = new Game(size);
+		s = new State(size);
 	}
-	
+
 	public void play() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		while(!g.checkSolved()) {
+
+		while (!s.checkSolved()) {
 			try {
-				g.getCurrent().printState();
-				g.move(br.readLine());
-				
+				s.printState();
+
+				String move = br.readLine();
+
+				if (s.checkMove(move)) {
+					s.move(move);
+				}
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+
 		System.out.println("solved");
-		
-		
+
 	}
-	
+
 }

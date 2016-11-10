@@ -4,9 +4,9 @@ public class Node {
 	private int depth;
 
 	
-	public Node(int n, int depth) {
+	public Node(int n) {
 		state = new State(n);
-		this.depth = depth;
+		this.depth = 1;
 	}
 	
 	public Node(State s, int depth) {
@@ -20,6 +20,14 @@ public class Node {
 
 	public void setState(State state) {
 		this.state = state;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 	
 }
