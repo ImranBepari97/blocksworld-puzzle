@@ -1,6 +1,8 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Stack;
 
 public class Algorithms {
@@ -94,32 +96,39 @@ public class Algorithms {
 				return;
 			}
 			
+			ArrayList<Node> nextLevel = new ArrayList<Node>();
+			
 			if (temp.getState().checkMove("up")) {
 				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("up");
-				stack.push(newNode);
+				nextLevel.add(newNode);
 				node++;
 			}
 			
 			if (temp.getState().checkMove("down")) {
 				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("down");
-				stack.push(newNode);
+				nextLevel.add(newNode);
 				node++;
 			}
 			
 			if (temp.getState().checkMove("left")) {
 				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("left");
-				stack.push(newNode);
+				nextLevel.add(newNode);
 				node++;
 			}
 			
 			if (temp.getState().checkMove("right")) {
 				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("right");
-				stack.push(newNode);
+				nextLevel.add(newNode);
 				node++;
+			}
+			
+			while(!nextLevel.isEmpty()) {
+				int r = new Random().nextInt(nextLevel.size());
+				stack.push(nextLevel.remove(r));
 			}
 		}
 	}
