@@ -6,17 +6,18 @@ import java.util.Random;
 import java.util.Stack;
 
 public class Algorithms {
+	
+	/* This algorithms class is just a set of 4 search algorithms to solve the puzzle. 
+	 * It contains Breadth First Search, Depth First Search, Iterative Deepening and A Star Heuristic.
+	 * To use Depth First Search, use dfs() with a negative iterations value, otherwise, using it with a +ve iterations value does Iterative Deepening.
+	 */
 
-	private int size;
 
 	public static void main(String[] args) {
-		Algorithms a = new Algorithms(3);
+		Algorithms a = new Algorithms();
 		a.dfs(new Node(3), 20);
 	}
 
-	public Algorithms(int size) {
-		this.size = size;
-	}
 
 	public void bfs(Node root) {
 		/* Breadth first search will expand all possible moves, and see which path eventually hits the solved state.
@@ -31,7 +32,6 @@ public class Algorithms {
 			return;
 		}
 
-		queue.clear();
 		//start the queue with the root
 		queue.add(root);
 
@@ -52,7 +52,6 @@ public class Algorithms {
 			}
 
 			//add all the possible moves to the tree from where you are, incrememnt node amount and depth too
-			
 			if (temp.getState().checkMove("up")) {
 				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("up");
@@ -110,7 +109,7 @@ public class Algorithms {
 			System.out.println("-------");
 
 			if (temp.getState().checkSolved()) {
-				System.out.println("solved");
+				System.out.println("solved on depth try: " + iterations);
 				return;
 			}
 
@@ -152,13 +151,76 @@ public class Algorithms {
 					int r = new Random().nextInt(nextLevel.size());
 					stack.push(nextLevel.remove(r));
 				}
-				
+				//add one to the iteration because you've generated a new level
 				curIter++;
 			}
-
-			
 		}
 		//if you get to the end of the tree with no solutions, stop
 		System.out.println("Could not find solution up to depth of " + iterations);
+		dfs(root, iterations +1);
+		
+	}
+
+	public void aStar(Node root) {
+		/* A Star Heuristic search uses guesses based on the Manhattan distance. It's basically the breadth first above copied and pasted, 
+		 * using a Priority Queue. The queue can sort the Nodes by which ones are closer to the solution. This formula can be found in the Node class at 
+		 * line 40 onward. The queue just searches these first constantly to get there quicker.
+		 */
+		PriorityQueue<Node> queue = new PriorityQueue<Node>();
+
+		int node = 0;
+
+		if (root == null) {
+			return;
+		}
+		//start the queue with the root
+		queue.add(root);
+
+		//keep going
+		while (!queue.isEmpty()) {
+			//get a node and take it off the queue to analyze it
+			Node temp = queue.poll();
+
+			//just print details
+			temp.getState().printState();
+			System.out.println("Node number: " + node + "	Node depth: " + temp.getDepth() + "	Total Cost: " + (temp.getManDist() + temp.getDepth()));
+			System.out.println("-------");
+
+			//is it solved? if so then stop
+			if (temp.getState().checkSolved()) {
+				System.out.println("solved");
+				return;
+			}
+
+			//add all the possible moves to the tree from where you are, increment node amount and depth too
+			
+			if (temp.getState().checkMove("up")) {
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				newNode.getState().move("up");
+				queue.add(newNode);
+				node++;
+			}
+
+			if (temp.getState().checkMove("down")) {
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				newNode.getState().move("down");
+				queue.add(newNode);
+				node++;
+			}
+
+			if (temp.getState().checkMove("left")) {
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				newNode.getState().move("left");
+				queue.add(newNode);
+				node++;
+			}
+
+			if (temp.getState().checkMove("right")) {
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				newNode.getState().move("right");
+				queue.add(newNode);
+				node++;
+			}
+		}
 	}
 }
