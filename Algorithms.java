@@ -15,7 +15,7 @@ public class Algorithms {
 
 	public static void main(String[] args) {
 		Algorithms a = new Algorithms();
-		a.dfs(new Node(3), 20);
+		a.bfs(new HeuristicNode(3));
 	}
 
 
@@ -161,12 +161,12 @@ public class Algorithms {
 		
 	}
 
-	public void aStar(Node root) {
+	public void aStar(HeuristicNode root) {
 		/* A Star Heuristic search uses guesses based on the Manhattan distance. It's basically the breadth first above copied and pasted, 
 		 * using a Priority Queue. The queue can sort the Nodes by which ones are closer to the solution. This formula can be found in the Node class at 
 		 * line 40 onward. The queue just searches these first constantly to get there quicker.
 		 */
-		PriorityQueue<Node> queue = new PriorityQueue<Node>();
+		PriorityQueue<HeuristicNode> queue = new PriorityQueue<HeuristicNode>();
 
 		int node = 0;
 
@@ -179,7 +179,7 @@ public class Algorithms {
 		//keep going
 		while (!queue.isEmpty()) {
 			//get a node and take it off the queue to analyze it
-			Node temp = queue.poll();
+			HeuristicNode temp = queue.poll();
 
 			//just print details
 			temp.getState().printState();
@@ -195,28 +195,28 @@ public class Algorithms {
 			//add all the possible moves to the tree from where you are, increment node amount and depth too
 			
 			if (temp.getState().checkMove("up")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("up");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("down")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("down");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("left")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("left");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("right")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
 				newNode.getState().move("right");
 				queue.add(newNode);
 				node++;
