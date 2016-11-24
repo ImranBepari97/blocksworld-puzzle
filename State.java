@@ -7,19 +7,12 @@ public class State {
 	private int agentX;
 	private int agentY;
 
-//	public static void main(String[] args) {
-//		State s = new State(4);
-//		s.move("right");
-//		s.move("up");
-//		s.printState();
-//		s.move("left");
-//		s.printState();
-//		s.move("down");
-//		s.printState();
-//		s.move("right");
-//		s.printState();
-//
-//	}
+	public static void main(String[] args) {
+		State s = new State(4);
+		s.createSolved();
+		s.printState();
+
+	}
 
 	public char[][] getBoard() {
 		return board;
@@ -45,25 +38,24 @@ public class State {
 		this.size = size;
 	}
 
-	public void createSolved(int n) {
-		char[][] solved = new char[n][n];
+	public void createSolved() {
 
-		for (int x = 0; x < n; x++) {
-			for (int y = 0; y < n; y++) {
-				solved[y][x] = '0';
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				board[y][x] = '0';
 			}
 		}
 
-		for (int y = 0; y < solved.length; y++) {
+		for (int y = 0; y < size; y++) {
 			char currentLetter = 'a';
-			for (int x = 1; x < solved.length; x++) {
-				solved[x][y] = currentLetter;
+			for (int x = 1; x < size; x++) {
+				board[x][y] = currentLetter;
 				currentLetter++;
 			}
 		}
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				System.out.print(solved[y][x]);
+				System.out.print(board[y][x]);
 			}
 			System.out.println();
 		}

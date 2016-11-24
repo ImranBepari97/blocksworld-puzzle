@@ -15,7 +15,9 @@ public class Algorithms {
 
 	public static void main(String[] args) {
 		Algorithms a = new Algorithms();
-		a.bfs(new HeuristicNode(3));
+		a.bfs(new Node(4));
+		
+		
 	}
 
 
@@ -25,7 +27,7 @@ public class Algorithms {
 		 */
 		
 		LinkedList<Node> queue = new LinkedList<Node>();
-
+		int timeComplexity = 0;
 		int node = 0;
 
 		if (root == null) {
@@ -47,7 +49,9 @@ public class Algorithms {
 
 			//is it solved? if so then stop
 			if (temp.getState().checkSolved()) {
-				System.out.println("solved");
+				System.out.println("Solved");
+				System.out.println("Space complexity: " + Math.pow(4, temp.depth + 1));
+				System.out.println("Time Complexity: " + timeComplexity);
 				return;
 			}
 
@@ -79,6 +83,8 @@ public class Algorithms {
 				queue.add(newNode);
 				node++;
 			}
+			
+			timeComplexity++;
 		}
 	}
 
@@ -88,7 +94,7 @@ public class Algorithms {
 		 *  Stack is used to pop.
 		 */
 		Stack<Node> stack = new Stack<Node>();
-		int curIter = 0;
+		int timeComplexity = 0;
 		int node = 0;
 
 		if (root == null) {
@@ -109,14 +115,16 @@ public class Algorithms {
 			System.out.println("-------");
 
 			if (temp.getState().checkSolved()) {
-				System.out.println("solved on depth try: " + iterations);
+				System.out.println("Solved on depth try: " + iterations);
+				System.out.println("Time complexity: " + timeComplexity);
+				System.out.println("Space complexity: " + 4*temp.depth);
 				return;
 			}
 
 			ArrayList<Node> nextLevel = new ArrayList<Node>();
 
 			//when the depth specified is hit, then stop generated nodes for the tree to search
-			if (curIter != iterations) {
+			if (temp.depth != iterations) {
 				if (temp.getState().checkMove("up")) {
 					Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
 					newNode.getState().move("up");
@@ -144,20 +152,21 @@ public class Algorithms {
 					nextLevel.add(newNode);
 					node++;
 				}
-
+				
+				timeComplexity++;
 				
 				//randomly add the new nodes to the stack
 				while (!nextLevel.isEmpty()) {
 					int r = new Random().nextInt(nextLevel.size());
 					stack.push(nextLevel.remove(r));
 				}
+				
 				//add one to the iteration because you've generated a new level
-				curIter++;
 			}
 		}
 		//if you get to the end of the tree with no solutions, stop
 		System.out.println("Could not find solution up to depth of " + iterations);
-		dfs(root, iterations +1);
+		dfs(root, iterations + 1);
 		
 	}
 
@@ -168,6 +177,7 @@ public class Algorithms {
 		 */
 		PriorityQueue<HeuristicNode> queue = new PriorityQueue<HeuristicNode>();
 
+		int timeComplexity = 0;
 		int node = 0;
 
 		if (root == null) {
@@ -189,6 +199,7 @@ public class Algorithms {
 			//is it solved? if so then stop
 			if (temp.getState().checkSolved()) {
 				System.out.println("solved");
+				System.out.println("Time complexity: " + timeComplexity);
 				return;
 			}
 
@@ -221,6 +232,8 @@ public class Algorithms {
 				queue.add(newNode);
 				node++;
 			}
+			
+			timeComplexity++;
 		}
 	}
 }
