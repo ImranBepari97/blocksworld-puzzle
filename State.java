@@ -1,19 +1,20 @@
-import java.awt.Point;
-
 public class State {
+	/* State class represents the board and everything on it at the moment. It
+	 * stores the board in the form of a char[][], the agents position and the size. 
+	 */
 	private char[][] board;
 	private int size;
-	private Point agentPosition;
 	private int agentX;
 	private int agentY;
 
+	//test code to see if creating a solved board would work
 	public static void main(String[] args) {
 		State s = new State(4);
 		s.createSolved();
 		s.printState();
-
 	}
 
+	// getters and setters
 	public char[][] getBoard() {
 		return board;
 	}
@@ -26,20 +27,15 @@ public class State {
 		return size;
 	}
 
-	public Point getAgentPosition() {
-		return agentPosition;
-	}
-
-	public void setAgentPosition(Point agentPosition) {
-		this.agentPosition = agentPosition;
-	}
-
 	public void setSize(int size) {
 		this.size = size;
 	}
 
+	/*method used to create a sample solved board. makes it in all columns
+	*it was mainly used so I could code the method for checking whether the board 
+	*was solved
+	*/
 	public void createSolved() {
-
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
 				board[y][x] = '0';
@@ -53,6 +49,7 @@ public class State {
 				currentLetter++;
 			}
 		}
+		
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
 				System.out.print(board[y][x]);
@@ -62,6 +59,10 @@ public class State {
 	}
 	// y is first array, x is second array
 
+	/*this constructor duplicates another State, this would be so that 
+	 * the tree nodes would have separate States and it all wouldn't reference the same
+	 * one. It just copies everything
+	 */
 	public State(State state) {
 		board = new char[state.getSize()][state.getSize()];
 		
@@ -76,6 +77,7 @@ public class State {
 		this.agentY = state.agentY;
 	}
 
+	//constructor for the first state
 	public State(int size) {
 		this.size = size;
 		char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -96,11 +98,10 @@ public class State {
 
 		// sets agent tile
 		board[size - 1][size - 1] = '!';
-		agentPosition = new Point(size - 1, size - 1);
 		agentX = agentY = size - 1;
-
 	}
 
+	//just prints out the board state in correct form
 	public void printState() {
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
@@ -111,14 +112,18 @@ public class State {
 		System.out.println();
 	}
 
+	/*kind of useless, decided to trust in my code keeping track of where
+	* the agent is
+	*/
 	public boolean checkAgentPosition() {
-		if (board[agentPosition.y][agentPosition.x] == '!') {
+		if (board[agentY][agentX] == '!') {
 			return true;
 		} else {
 			for (int y = 0; y < size - 1; y++) {
 				for (int x = 0; x < size - 1; x++) {
 					if (board[y][x] == '!') {
-						agentPosition = new Point(x, y);
+						agentY = y;
+						agentX = x;
 					}
 				}
 			}
@@ -126,6 +131,10 @@ public class State {
 		return false;
 	}
 
+	/*important method that checks whether the board is solved or not. 
+	 * Counts the amount of letters in the right spot, for each column. 
+	 * There's n-1 letters to the size.
+	*/
 	public boolean checkSolved() {
 		for (int y = 0; y < board.length; y++) {
 			char currentLetter = 'a';
@@ -146,6 +155,7 @@ public class State {
 		return false;
 	}
 
+	//verifies if a move is valid, or if you're going into a wall
 	public boolean checkMove(String direction) {
 		switch (direction) {
 		case "up":
@@ -178,6 +188,7 @@ public class State {
 		return false;
 	}
 
+	//Actually moves the agent
 	public void move(String direction) {
 		char newSpot;
 		switch (direction) {

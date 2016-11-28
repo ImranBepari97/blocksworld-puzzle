@@ -12,8 +12,8 @@ public class HeuristicNode extends Node implements Comparable  {
 		return manDist;
 	}
 	
-	public HeuristicNode(State s, int depth) {
-		super(s, depth);
+	public HeuristicNode(State s, int depth, String direction) {
+		super(s, depth, direction);
 		manDist = calcManDistance();
 	}
 	

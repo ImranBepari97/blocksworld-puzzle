@@ -6,234 +6,243 @@ import java.util.Random;
 import java.util.Stack;
 
 public class Algorithms {
-	
-	/* This algorithms class is just a set of 4 search algorithms to solve the puzzle. 
-	 * It contains Breadth First Search, Depth First Search, Iterative Deepening and A Star Heuristic.
-	 * To use Depth First Search, use dfs() with a negative iterations value, otherwise, using it with a +ve iterations value does Iterative Deepening.
+	/*
+	 * This algorithms class is just a set of 4 search algorithms to solve the
+	 * puzzle. It contains Breadth First Search, Depth First Search, Iterative
+	 * Deepening and A Star Heuristic. To use Depth First Search, use dfs() with
+	 * a negative iterations value, otherwise, using it with a +ve iterations
+	 * value does Iterative Deepening.
 	 */
-
-
 	public static void main(String[] args) {
 		Algorithms a = new Algorithms();
-		a.bfs(new Node(4));
-		
-		
+		a.bfs(new Node(3));
+
 	}
 
-
 	public void bfs(Node root) {
-		/* Breadth first search will expand all possible moves, and see which path eventually hits the solved state.
-		 * This goes level by level, slowly going deeper. Utilizes a queue for this, will search whatevers in front of the queue. 
+		/*
+		 * Breadth first search will expand all possible moves, and see which
+		 * path eventually hits the solved state. This goes level by level,
+		 * slowly going deeper. Utilizes a queue for this, will search whatevers
+		 * in front of the queue.
 		 */
-		
 		LinkedList<Node> queue = new LinkedList<Node>();
-		int timeComplexity = 0;
 		int node = 0;
-
+		int nodeExp = 0;
 		if (root == null) {
 			return;
 		}
 
-		//start the queue with the root
+		// start the queue with the root
 		queue.add(root);
-
-		//keep going
+		// keep going
 		while (!queue.isEmpty()) {
-			//get a node and take it off the queue to analyze it
+			// get a node and take it off the queue to analyze it
 			Node temp = queue.poll();
+			nodeExp++;
 
-			//just print details
+			// just print details
 			temp.getState().printState();
-			System.out.println("Node number: " + node + "	Node depth: " + temp.getDepth());
+			System.out.println("Total node number: " + node + "	Node depth: " + temp.getDepth() + "	Node direction: " + temp.directionFromParent);
 			System.out.println("-------");
 
-			//is it solved? if so then stop
+			// is it solved? if so then stop
 			if (temp.getState().checkSolved()) {
 				System.out.println("Solved");
 				System.out.println("Space complexity: " + Math.pow(4, temp.depth + 1));
-				System.out.println("Time Complexity: " + timeComplexity);
+				System.out.println("Nodes expanded: " + nodeExp);
 				return;
 			}
 
-			//add all the possible moves to the tree from where you are, incrememnt node amount and depth too
+			// add all the possible moves to the tree from where you are,
+			// incrememnt node amount and depth too
 			if (temp.getState().checkMove("up")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "UP");
 				newNode.getState().move("up");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("down")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "DOWN");
 				newNode.getState().move("down");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("left")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "LEFT");
 				newNode.getState().move("left");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("right")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "RIGHT");
 				newNode.getState().move("right");
 				queue.add(newNode);
 				node++;
 			}
-			
-			timeComplexity++;
 		}
 	}
 
 	public void dfs(Node root, int iterations) {
-		/* Iterative deepening search and normal depth first search in one. To use depth first as usual, make the iterations -1.
-		 *  Depth first goes down a whole branch till the bottom, comes back up and searches the next branch. A branch is stopped by an invalid move.
-		 *  Stack is used to pop.
+		/*
+		 * Iterative deepening search and normal depth first search in one. To
+		 * use depth first as usual, make the iterations -1. Depth first goes
+		 * down a whole branch till the bottom, comes back up and searches the
+		 * next branch. A branch is stopped by an invalid move. Stack is used to
+		 * pop.
 		 */
 		Stack<Node> stack = new Stack<Node>();
-		int timeComplexity = 0;
 		int node = 0;
-
 		if (root == null) {
 			return;
 		}
 
 		stack.push(root);
+		int nodeExp = 0;
+		/*
+		 * all of this is largely the same as BFS aside from the stack and using
+		 * the iterations, however nodes are added to an arraylist first to be
+		 * randomly added to the tree. This way you don't go down the up branch
+		 * all the way first.
+		 */
+		while (true) {
+			while (!stack.isEmpty()) {
+				Node temp = stack.pop();
+				nodeExp++;
+				temp.getState().printState();
+				System.out.println("Node number: " + node + "	Node depth: " + temp.getDepth() + "	Node direction: " + temp.directionFromParent);
+				
+				System.out.println("-------");
 
-		/*all of this is largely the same as BFS aside from the stack and using the iterations, however nodes are added to an
-		* arraylist first to be randomly added to the tree. This way you don't go down the up branch all the way first. 
-		*/
-		
-		while (!stack.isEmpty()) {
-			Node temp = stack.pop();
+				if (temp.getState().checkSolved()) {
+					System.out.println("Solved on depth try: " + iterations);
+					System.out.println("Nodes expanded: " + nodeExp);
+					return;
+				}
 
-			temp.getState().printState();
-			System.out.println("Node number: " + node + "	Node depth: " + temp.getDepth());
-			System.out.println("-------");
+				ArrayList<Node> nextLevel = new ArrayList<Node>();
 
-			if (temp.getState().checkSolved()) {
-				System.out.println("Solved on depth try: " + iterations);
-				System.out.println("Time complexity: " + timeComplexity);
-				System.out.println("Space complexity: " + 4*temp.depth);
-				return;
+				// when the depth specified is hit, then stop generated nodes
+				// for the tree to search
+				if (temp.depth != iterations) {
+					if (temp.getState().checkMove("up")) {
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "UP");
+						newNode.getState().move("up");
+						nextLevel.add(newNode);
+						node++;
+					}
+
+					if (temp.getState().checkMove("down")) {
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "DOWN");
+						newNode.getState().move("down");
+						nextLevel.add(newNode);
+						node++;
+					}
+
+					if (temp.getState().checkMove("left")) {
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "LEFT");
+						newNode.getState().move("left");
+						nextLevel.add(newNode);
+						node++;
+					}
+
+					if (temp.getState().checkMove("right")) {
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "RIGHT");
+						newNode.getState().move("right");
+						nextLevel.add(newNode);
+						node++;
+					}
+
+					// randomly add the new nodes to the stack
+					while (!nextLevel.isEmpty()) {
+						int r = new Random().nextInt(nextLevel.size());
+						stack.push(nextLevel.remove(r));
+					}
+					// add one to the iteration because you've generated a new
+					// level
+				}
 			}
-
-			ArrayList<Node> nextLevel = new ArrayList<Node>();
-
-			//when the depth specified is hit, then stop generated nodes for the tree to search
-			if (temp.depth != iterations) {
-				if (temp.getState().checkMove("up")) {
-					Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
-					newNode.getState().move("up");
-					nextLevel.add(newNode);
-					node++;
-				}
-
-				if (temp.getState().checkMove("down")) {
-					Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
-					newNode.getState().move("down");
-					nextLevel.add(newNode);
-					node++;
-				}
-
-				if (temp.getState().checkMove("left")) {
-					Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
-					newNode.getState().move("left");
-					nextLevel.add(newNode);
-					node++;
-				}
-
-				if (temp.getState().checkMove("right")) {
-					Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1);
-					newNode.getState().move("right");
-					nextLevel.add(newNode);
-					node++;
-				}
-				
-				timeComplexity++;
-				
-				//randomly add the new nodes to the stack
-				while (!nextLevel.isEmpty()) {
-					int r = new Random().nextInt(nextLevel.size());
-					stack.push(nextLevel.remove(r));
-				}
-				
-				//add one to the iteration because you've generated a new level
-			}
+			// if you get to the end of the tree with no solutions, stop
+			System.out.println("Could not find solution up to depth of " + iterations + ", incrementing.");
+			System.out.println();
+			stack.clear();
+			stack.push(root);
+			iterations++;
 		}
-		//if you get to the end of the tree with no solutions, stop
-		System.out.println("Could not find solution up to depth of " + iterations);
-		dfs(root, iterations + 1);
-		
 	}
 
 	public void aStar(HeuristicNode root) {
-		/* A Star Heuristic search uses guesses based on the Manhattan distance. It's basically the breadth first above copied and pasted, 
-		 * using a Priority Queue. The queue can sort the Nodes by which ones are closer to the solution. This formula can be found in the Node class at 
-		 * line 40 onward. The queue just searches these first constantly to get there quicker.
+		/*
+		 * A Star Heuristic search uses guesses based on the Manhattan distance.
+		 * It's basically the breadth first above copied and pasted, using a
+		 * Priority Queue. The queue can sort the Nodes by which ones are closer
+		 * to the solution. This formula can be found in the Node class at line
+		 * 40 onward. The queue just searches these first constantly to get
+		 * there quicker.
 		 */
 		PriorityQueue<HeuristicNode> queue = new PriorityQueue<HeuristicNode>();
-
-		int timeComplexity = 0;
 		int node = 0;
+		int nodeExp = 0;
 
 		if (root == null) {
 			return;
 		}
-		//start the queue with the root
+		// start the queue with the root
 		queue.add(root);
 
-		//keep going
+		// keep going
 		while (!queue.isEmpty()) {
-			//get a node and take it off the queue to analyze it
+			// get a node and take it off the queue to analyze it
 			HeuristicNode temp = queue.poll();
+			nodeExp++;
 
-			//just print details
+			// just print details
 			temp.getState().printState();
-			System.out.println("Node number: " + node + "	Node depth: " + temp.getDepth() + "	Total Cost: " + (temp.getManDist() + temp.getDepth()));
+			System.out.println("Node number: " + node + "	Node depth: " + temp.getDepth() + "	Total Cost: "
+					+ (temp.getManDist() + temp.getDepth()) + "	Node direction: " + temp.directionFromParent);
+			
 			System.out.println("-------");
 
-			//is it solved? if so then stop
+			// is it solved? if so then stop
 			if (temp.getState().checkSolved()) {
+				System.out.println("Nodes expanded: " + nodeExp);
 				System.out.println("solved");
-				System.out.println("Time complexity: " + timeComplexity);
 				return;
 			}
 
-			//add all the possible moves to the tree from where you are, increment node amount and depth too
-			
+			// add all the possible moves to the tree from where you are,
+			// increment node amount and depth too
+
 			if (temp.getState().checkMove("up")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "UP");
 				newNode.getState().move("up");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("down")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "DOWN");
 				newNode.getState().move("down");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("left")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "LEFT");
 				newNode.getState().move("left");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("right")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1);
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "RIGHT");
 				newNode.getState().move("right");
 				queue.add(newNode);
 				node++;
 			}
-			
-			timeComplexity++;
 		}
 	}
 }

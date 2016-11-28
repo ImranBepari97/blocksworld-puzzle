@@ -1,13 +1,14 @@
 import java.awt.Point;
 
 public class Game {
+	
+	//Dead class. Originally used to control the State, but since, the methods from here have been integrated into State.
+	 
 	private State current;
 
 	public Game(int size) {
 		current = new State(size);
 	}
-	
-	
 
 	public State getCurrent() {
 		return current;
