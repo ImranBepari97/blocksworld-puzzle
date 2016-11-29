@@ -15,7 +15,7 @@ public class Algorithms {
 	 */
 	public static void main(String[] args) {
 		Algorithms a = new Algorithms();
-		a.bfs(new Node(3));
+		a.bfs(new Node(2));
 
 	}
 
@@ -46,39 +46,49 @@ public class Algorithms {
 			System.out.println("Total node number: " + node + "	Node depth: " + temp.getDepth() + "	Node direction: " + temp.directionFromParent);
 			System.out.println("-------");
 
-			// is it solved? if so then stop
+			// is it solved? if so then stop, print out the output
 			if (temp.getState().checkSolved()) {
 				System.out.println("Solved");
 				System.out.println("Space complexity: " + Math.pow(4, temp.depth + 1));
 				System.out.println("Nodes expanded: " + nodeExp);
+				
+				Node curNodePath = temp;
+				String path = curNodePath.getDirectionFromParent();
+				
+				while((curNodePath = curNodePath.getParent()) != null) {
+					path = curNodePath.getDirectionFromParent() + ", " + path;
+				}
+				
+				System.out.println("Path to solution: " + path);
+				
 				return;
 			}
 
 			// add all the possible moves to the tree from where you are,
 			// incrememnt node amount and depth too
 			if (temp.getState().checkMove("up")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "UP");
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "UP", temp);
 				newNode.getState().move("up");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("down")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "DOWN");
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "DOWN", temp);
 				newNode.getState().move("down");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("left")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "LEFT");
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "LEFT", temp);
 				newNode.getState().move("left");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("right")) {
-				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "RIGHT");
+				Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "RIGHT", temp);
 				newNode.getState().move("right");
 				queue.add(newNode);
 				node++;
@@ -120,6 +130,16 @@ public class Algorithms {
 				if (temp.getState().checkSolved()) {
 					System.out.println("Solved on depth try: " + iterations);
 					System.out.println("Nodes expanded: " + nodeExp);
+					
+					Node curNodePath = temp;
+					String path = curNodePath.getDirectionFromParent();
+					
+					while((curNodePath = curNodePath.getParent()) != null) {
+						path = curNodePath.getDirectionFromParent() + ", " + path;
+					}
+					
+					System.out.println("Path to solution: " + path);
+					
 					return;
 				}
 
@@ -129,28 +149,28 @@ public class Algorithms {
 				// for the tree to search
 				if (temp.depth != iterations) {
 					if (temp.getState().checkMove("up")) {
-						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "UP");
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "UP", temp);
 						newNode.getState().move("up");
 						nextLevel.add(newNode);
 						node++;
 					}
 
 					if (temp.getState().checkMove("down")) {
-						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "DOWN");
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "DOWN", temp);
 						newNode.getState().move("down");
 						nextLevel.add(newNode);
 						node++;
 					}
 
 					if (temp.getState().checkMove("left")) {
-						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "LEFT");
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "LEFT", temp);
 						newNode.getState().move("left");
 						nextLevel.add(newNode);
 						node++;
 					}
 
 					if (temp.getState().checkMove("right")) {
-						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "RIGHT");
+						Node newNode = new Node(new State(temp.getState()), temp.getDepth() + 1, "RIGHT", temp);
 						newNode.getState().move("right");
 						nextLevel.add(newNode);
 						node++;
@@ -210,6 +230,16 @@ public class Algorithms {
 			if (temp.getState().checkSolved()) {
 				System.out.println("Nodes expanded: " + nodeExp);
 				System.out.println("solved");
+				
+				Node curNodePath = temp;
+				String path = curNodePath.getDirectionFromParent();
+				
+				while((curNodePath = curNodePath.getParent()) != null) {
+					path = curNodePath.getDirectionFromParent() + ", " + path;
+				}
+				
+				System.out.println("Path to solution: " + path);
+				
 				return;
 			}
 
@@ -217,28 +247,28 @@ public class Algorithms {
 			// increment node amount and depth too
 
 			if (temp.getState().checkMove("up")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "UP");
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "UP", temp);
 				newNode.getState().move("up");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("down")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "DOWN");
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "DOWN", temp);
 				newNode.getState().move("down");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("left")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "LEFT");
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "LEFT", temp);
 				newNode.getState().move("left");
 				queue.add(newNode);
 				node++;
 			}
 
 			if (temp.getState().checkMove("right")) {
-				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "RIGHT");
+				HeuristicNode newNode = new HeuristicNode(new State(temp.getState()), temp.getDepth() + 1, "RIGHT", temp);
 				newNode.getState().move("right");
 				queue.add(newNode);
 				node++;
